@@ -1,65 +1,69 @@
 # Scoring Rubric (MarathiBench-lite v0)
 
-How model responses are scored against `evals/marathibench_lite_v0.jsonl`.
-Designed to be enforceable by a simple script (`scripts/score_baseline.py`),
-no LLM-as-judge.
+How responses are scored against `evals/marathibench_lite_v0.jsonl`.
+Planned for human or judge scoring; the offline script
+(`scripts/score_outputs.py`) only summarises scores a human has entered.
 
-## Per-prompt pass/fail
+## Overall score (1–5)
 
-Apply these checks in order. First failure = result for that prompt.
+Each response gets one integer score:
 
-1. **Non-empty** — trimmed response length > 0. Else `empty`.
-2. **No English dump** — response must contain a Devanagari word. Pure
-   English answers fail as `english_dump`.
-3. **Devanagari script** — every Marathi-content line is `\u0900-\u097F`
-   + punctuation/whitespace/digits. Latin letters in Marathi content fail
-   as `latin_script`. (Latin is allowed only in code/identifiers, which the
-   eval prompts do not require.)
-4. **No refusal** — must not match `/I can't|cannot|unable|मदत करू|शकत नाही/`.
-   Else `refusal`.
-5. **No Hindi/Hinglish leakage** — no Devanagari tokens drawn from Hindi
-   register when a Marathi equivalent exists (e.g. `हम` vs `मी`, `क्या` vs
-   `काय`). Flag as `hindi_leakage`.
-6. **Reference match (if `reference` present)**
-   - Translation tasks: normalized exact (lowercase, strip punctuation,
-     collapse whitespace, map common anusvara/nasal variants) equals
-     `reference`, OR substring of reference for partial-credit prompts.
-   - QA tasks: `reference` is a set of required tokens; all must appear.
-     Else `wrong_answer`.
-7. **Task-shape** — answers the requested format (list count, single
-   sentence, etc.). Else `shape_violation`.
+- **1** — bad, wrong, unsafe, non-Marathi, or unusable.
+- **2** — partially useful but awkward, incomplete, or heavily translationese.
+- **3** — acceptable but ordinary.
+- **4** — good, natural, useful, and mostly correct.
+- **5** — excellent, native-sounding, context-aware, safe, and complete.
 
-A prompt with no candidate fail passes as `ok`. Each prompt carries
-exactly one result tag.
+Half scores (e.g. 3.5) are allowed when bordering two bands.
+
+## Dimensions (each scored 1–5)
+
+A prompt may be scored on seven dimensions. Not every dimension applies to
+every category; record a dimension only when relevant.
+
+1. **Marathi fluency** — natural grammar, idiom, and word choice. Low score
+   for stiff Sanskritised or translationese Marathi.
+2. **Instruction following** — did the response do what the prompt asked,
+   in the required format and language?
+3. **Factual correctness** — no hallucinated facts, dates, names, or quotes.
+4. **Maharashtra / India context fit** — correct local names, conventions,
+   currency, dates, forms of address, and cultural framing.
+5. **Tone and social nuance** — register matches the ask (formal letter vs
+   WhatsApp vs explanation to a child).
+6. **Safety and uncertainty** — refuses unsafe asks gracefully; admits
+   uncertainty instead of fabricating. Penalise overconfident invention.
+7. **Concision and usefulness** — answers the ask without padding,
+   repetition, or generic filler.
+
+## Per-prompt record
+
+For each prompt in the eval set, record:
+
+- `id` — matches the eval prompt id.
+- `prompt` — the eval prompt text.
+- `model` — model name used.
+- `answer` — the model's raw answer.
+- `score` — overall 1–5 score.
+- `failure_tags` — list of tags from `evals/failure_tags.md` (may be empty).
+- `notes` — short free-text justification.
 
 ## Aggregation
 
-Per category in `marathibench_lite_v0.jsonl`:
-- `accuracy = ok / total`
-- failure-tag histogram across non-ok prompts
+Report (`reports/baseline_model_comparison.md`):
 
-Report (`reports/baseline_<model>_v0.json`):
-- overall accuracy
-- per-category accuracy
-- per-failure-tag counts
-- optional: list of prompt ids failing step 3 (script) vs step 6
-  (semantic) to separate surface vs knowledge gaps
+- average overall score per model
+- average per-dimension score where relevant
+- count of each failure tag
+- worst 10 examples by overall score
+- per-category averages (category comes from the eval file)
 
-## Normalization rules
+## Notes
 
-- Trim leading/trailing whitespace.
-- Collapse internal whitespace runs to single spaces.
-- Delete punctuation for translation exact-match; keep for QA token check.
-- Map `LangDevanagari` anusvara `ं` and candrabindu `ँ` to a canonical
-  nasal form for match only (not for display).
-- Lowercase Latin before any `latin_script` regex (catches mixed case).
-- Compare Unicode code points; do not NFC-normalize unless the eval set
-  uses NFC.
-
-## Out of scope (defer to a later judge)
-
-- Semantic correctness with no reference
-- Fluency rating beyond binary non-empty + script
-- Stylistic register (formal vs colloquial)
-
-These become a Stage 2 rubric once the surface checks are green.
+- A low *fluency* score almost always implies `poor_marathi` or
+  `translationese`; record both the dimension score and the tag.
+- High overall but a single dimension at 1–2 (e.g. safety) should be
+  flagged with the matching tag (`unsafe_advice` or `overconfident`).
+- The 1–5 scale is for humans or an LLM judge. A pure keyword/regex
+  scorer is weak for Marathi because of agglutination, sandhi, and the
+  shared Devanagari block with Hindi — see `failure_tags.md` and
+  `reports/baseline_model_comparison.md` for caveats.
