@@ -48,16 +48,55 @@ def load_canonical_tags():
     return tags
 
 
+def _closest(tag, canonical):
+    """Return the closest canonical tag by edit distance (heuristic)."""
+    import difflib
+    matches = difflib.get_close_matches(tag, canonical, n=1, cutoff=0.6)
+    return matches[0] if matches else None
+
+
+ALIASES = {
+    "success": None,
+    "failed": "failed_instruction",
+    "translitonese": "translationese",
+    "over_confident": "overconfident",
+    "tooo_verbose": "too_verbose",
+    "missed_context": "missed_context",
+}
+
+
 def parse_tags_input(raw):
-    """Turn a typed tag string into a list of canonical, validated tags."""
-    raw_tags = [t.strip() for t in re.split(r"[,;\s]+", raw) if t.strip()]
+    """Turn a typed tag string into a list of canonical, validated tags.
+
+    Accepts commas, semicolons, spaces, quotes, brackets — whatever you
+    type, we extract the tag tokens, fix common typos, and map unknowns
+    to their closest canonical neighbour (with a confirmation prompt).
+    """
+    raw_tags = [t.strip().strip("`").strip('"').strip("'")
+                for t in re.split(r"[,;\s\[\]]+", raw) if t.strip().strip("`").strip('"').strip("'")]
     out = []
     for t in raw_tags:
         if t in CANONICAL_TAGS:
             out.append(t)
+            continue
+        if t in ALIASES:
+            mapped = ALIASES[t]
+            if mapped is None:
+                print(f"  tag '{t}': not a failure tag (success-like) — skipping.")
+            else:
+                print(f"  tag '{t}': mapped to '{mapped}' (alias).")
+                out.append(mapped)
+            continue
+        # Try fuzzy match against the canonical list.
+        guess = _closest(t, CANONICAL_TAGS)
+        if guess:
+            ans = input(f"  tag '{t}' not canonical. Use '{guess}' instead? [Y/n] ").strip().lower()
+            if ans in ("", "y", "yes"):
+                out.append(guess)
+            else:
+                print(f"  tag '{t}': dropped (not in canonical list, see evals/failure_tags.md).")
         else:
-            print(f"  WARNING: '{t}' not in canonical list "
-                  f"(see evals/failure_tags.md). Skipping.")
+            print(f"  tag '{t}': skipped — no close match in canonical list.")
     return out
 
 
