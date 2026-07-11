@@ -12,3 +12,4 @@ results/
 *.sqlite
 *.db
 .DS_Store
+.venv/
