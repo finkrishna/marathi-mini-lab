@@ -1,29 +1,36 @@
 # TASK-005 report
 
 ## Status
-BLOCKED
+AGENT_COMPLETE
 
 ## What changed
 
-- Created only `08_agent_reports/TASK-005-report.md`.
-- `scripts/judge_agreement.py` and `tests/test_judge_agreement.py` do not exist. Implementation stopped before creating them because the brief contains contradictory acceptance requirements.
-
-## Blocker and surprise
-
-The Behaviour section defines `within_half` as the count where `abs(diff) <= 0.5`. Test 1 supplies human scores `(5, 3)` and judge scores `(4, 3)`, giving absolute differences `(1, 0)`. Therefore the specified metric is `1`, but the test explicitly requires the literal `2`. MAE `0.5` and exact `1` are consistent.
-
-`docs/AGENT_RULES.md` requires: “If a premise in the brief is wrong, stop and report it. Do not silently redesign the task.” Neither the metric nor the required test was changed. PM/product-owner clarification is needed to correct the expected count or revise the metric and fixture consistently.
+- `scripts/judge_agreement.py`: stdlib JSONL comparison CLI, joined by id, with numeric score validation, missing/duplicate ID errors, MAE, exact and within-half counts, and pooled tag precision/recall rounded to three decimals. Errors go to stderr with exit 1 before metrics are printed.
+- `tests/test_judge_agreement.py`: nine unittest cases invoking the CLI against temporary synthetic fixtures, covering all four required cases plus duplicate judge IDs, invalid scores on either side, the half-point boundary, pooled tag sets, and individual zero denominators.
+- `08_agent_reports/TASK-005-report.md`: replaced the previous BLOCKED report with this execution evidence.
 
 ## Commands run and results
 
-- `cat docs/AGENT_RULES.md docs/tasks/TASK-005-judge-agreement.md` — exit 0; read both required documents.
-- `git status --short --branch; pwd; rg --files -g AGENTS.md` — overall exit 1 because no matching AGENTS.md was found. Status showed branch `feature/codex-judge-agreement` and pre-existing untracked `docs/`; cwd matched the assigned worktree.
-- `ls -ld scripts tests 08_agent_reports` — exit 1; `scripts` existed, while `tests` and `08_agent_reports` did not yet exist.
-- `git ls-files scripts/judge_agreement.py tests/test_judge_agreement.py 08_agent_reports/TASK-005-report.md` — exit 0; no tracked target files.
-- `python3 -c 'from pathlib import Path; paths = ("scripts/judge_agreement.py", "tests/test_judge_agreement.py", "08_agent_reports/TASK-005-report.md"); print({p: Path(p).exists() for p in paths}); diffs = [abs(h - j) for h, j in zip((5, 3), (4, 3))]; print({"n": len(diffs), "mae": sum(diffs) / len(diffs), "exact": sum(d == 0 for d in diffs), "within_half": sum(d <= 0.5 for d in diffs)})'` — exit 0; all three target files were absent before this report was written; calculated `{'n': 2, 'mae': 0.5, 'exact': 1, 'within_half': 1}`.
+- `cat docs/AGENT_RULES.md docs/tasks/TASK-005-judge-agreement.md` — exit 0; read standing rules and corrected brief.
+- `pwd; git status --short; git branch --show-current; rg --files -g AGENTS.md -g '*judge*' -g '*score*' -g 'test*' -g '*TASK-005*' -g '!outputs/**' -g '!runs/**' -g '!results/**'` — exit 0; assigned worktree and branch confirmed; pre-existing untracked `docs/` preserved.
+- `cat 08_agent_reports/TASK-005-report.md docs/dispatch/TASK-005-PM-FEEDBACK.md scripts/score_outputs.py; rg --files -g AGENTS.md -g '!outputs/**' -g '!runs/**' -g '!results/**' /Users/krishnaiyer/AI 2>/dev/null` — exit 0; read prior blocker, correction, and existing score schema; located inherited rules.
+- `cat /Users/krishnaiyer/AI/AGENTS.md; git ls-files scripts/judge_agreement.py tests/test_judge_agreement.py 08_agent_reports/TASK-005-report.md; ls -d tests` — exit 1 because `tests/` did not yet exist; report was already tracked.
+- `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -p 'test_judge_agreement.py' -v` — exit 0; all 9 tests passed. The required first fixture asserts literal MAE 0.5, exact 1, within_half 1. Missing judge ID exits 1 without MAE; tag overlap returns 0.500/0.500; empty tags return n/a/n/a with exit 0.
+- `git diff --check; git status --short; git branch --show-current; git diff -- 08_agent_reports/TASK-005-report.md; cat scripts/judge_agreement.py tests/test_judge_agreement.py` — exit 0; inspected implementation and tests; branch remained `feature/codex-judge-agreement`.
+
+## Decisions and surprises
+
+- The earlier blocker was explicitly corrected by PM feedback: within_half is 1. No metric was changed to satisfy the obsolete expectation of 2.
+- Used the existing `failure_tags` field. Tags are sets within each item, then counts are pooled across matched items. Omitted tags mean an empty set.
+- Human IDs define the comparison population. Additional judge IDs are validated but excluded from metrics. Duplicate IDs on either side are rejected.
+- Non-finite scores are rejected. Empty human input reports n=0, mae=n/a. IDs must be strings or integers.
 
 ## What was not verified
 
-- Required unittest cases were not implemented or run; the contradictory first acceptance test prevents a compliant implementation. No passing test claim is made.
-- Real baseline/model outputs were not read, scored, or judged. No Marathi content or judge JSONL was produced.
-- No push, branch switch, or changes to main were performed.
+- No real baseline or model outputs were read, scored, or judged. No Marathi content was generated.
+- No external model calls, native-speaker assessment, or full repository integration testing was performed. Validation is scoped to the requested CLI.
+- PM acceptance remains pending. No other agents were contacted, no push was performed, and main was not touched.
+
+## Commit scope
+
+The task commit is restricted to the three paths listed above on `feature/codex-judge-agreement`; identify it with `git log -1` after this report is committed.
