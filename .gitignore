@@ -13,3 +13,6 @@ results/
 *.db
 .DS_Store
 .venv/
+.agent_dispatch/
+.worktrees/
+node_modules/

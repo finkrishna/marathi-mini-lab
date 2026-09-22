@@ -10,9 +10,11 @@ small eval set, make seed training data, run baselines, score them with a
 practical rubric, and compare before/after — all without contaminating the
 repo with unverified or auto-generated gold data.
 
-> Status: sandbox phase. Baselines are directional only (n=5 per run).
-> Treat generated outputs as non-gold unless a native Marathi speaker has
-> signed off.
+> Status: sandbox phase. Qwen3-8B-4bit is scored on all 50 prompts
+> (average 3.58). See `reports/qwen3_run004_summary.md`. Smaller runs
+> are still n=5. Treat scores and generated Marathi as non-gold unless
+> a native speaker has signed off. Work stays in this directory. Do not
+> add sibling checkouts.
 
 ## What's in the box
 

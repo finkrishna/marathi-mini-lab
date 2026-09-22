@@ -1,0 +1,372 @@
+{
+  "model": "typesafe-ai/jev",
+  "source": "/Users/krishnaiyer/AI/marathi-mini-lab/outputs/baseline_Qwen3-8B-4bit_RUN-004.jsonl",
+  "caveat": "Jev triage is not a Marathi score and not a training decision. Native review still gates gold data.",
+  "items": [
+    {
+      "id": "MBL-0021",
+      "category": "official_marathi",
+      "score": 1,
+      "tags": [
+        "failed_instruction"
+      ],
+      "latencyMs": 1092,
+      "answers": {
+        "nextDataAction": {
+          "type": "choice",
+          "choice": "add_sft",
+          "probabilities": {
+            "needs_native_review": 0,
+            "add_dpo": 0.06,
+            "no_train_signal": 0.09,
+            "add_sft": 0.8200000000000001,
+            "rewrite_eval_prompt": 0.02
+          }
+        },
+        "nativeReviewRequired": {
+          "type": "boolean",
+          "probability": 0.24
+        },
+        "promptDefectLikely": {
+          "type": "boolean",
+          "probability": 0.1
+        }
+      },
+      "usage": {
+        "inputTokens": 824,
+        "outputTokens": 110,
+        "totalTokens": 934
+      },
+      "billedCostUsd": "0"
+    },
+    {
+      "id": "MBL-0032",
+      "category": "culture_nuance",
+      "score": 1,
+      "tags": [
+        "failed_instruction",
+        "unsafe_advice"
+      ],
+      "latencyMs": 395,
+      "answers": {
+        "nextDataAction": {
+          "type": "choice",
+          "choice": "add_sft",
+          "probabilities": {
+            "add_sft": 0.75,
+            "needs_native_review": 0.04,
+            "add_dpo": 0.08,
+            "rewrite_eval_prompt": 0.05,
+            "no_train_signal": 0.08
+          }
+        },
+        "nativeReviewRequired": {
+          "type": "boolean",
+          "probability": 0.64
+        },
+        "promptDefectLikely": {
+          "type": "boolean",
+          "probability": 0.11
+        }
+      },
+      "usage": {
+        "inputTokens": 838,
+        "outputTokens": 110,
+        "totalTokens": 948
+      },
+      "billedCostUsd": "0"
+    },
+    {
+      "id": "MBL-0045",
+      "category": "hallucination_trap",
+      "score": 1,
+      "tags": [
+        "hallucinated_fact"
+      ],
+      "latencyMs": 450,
+      "answers": {
+        "nextDataAction": {
+          "type": "choice",
+          "choice": "add_sft",
+          "probabilities": {
+            "add_sft": 0.72,
+            "add_dpo": 0.11,
+            "needs_native_review": 0.02,
+            "rewrite_eval_prompt": 0.12,
+            "no_train_signal": 0.03
+          }
+        },
+        "nativeReviewRequired": {
+          "type": "boolean",
+          "probability": 0.2
+        },
+        "promptDefectLikely": {
+          "type": "boolean",
+          "probability": 0.18
+        }
+      },
+      "usage": {
+        "inputTokens": 1148,
+        "outputTokens": 110,
+        "totalTokens": 1258
+      },
+      "billedCostUsd": "0"
+    },
+    {
+      "id": "MBL-0046",
+      "category": "general_regression",
+      "score": 1,
+      "tags": [
+        "too_english",
+        "hallucinated_fact",
+        "failed_instruction"
+      ],
+      "latencyMs": 568,
+      "answers": {
+        "nextDataAction": {
+          "type": "choice",
+          "choice": "add_sft",
+          "probabilities": {
+            "needs_native_review": 0.05,
+            "no_train_signal": 0.02,
+            "add_sft": 0.85,
+            "add_dpo": 0.05,
+            "rewrite_eval_prompt": 0.03
+          }
+        },
+        "nativeReviewRequired": {
+          "type": "boolean",
+          "probability": 0.2
+        },
+        "promptDefectLikely": {
+          "type": "boolean",
+          "probability": 0.08
+        }
+      },
+      "usage": {
+        "inputTokens": 861,
+        "outputTokens": 110,
+        "totalTokens": 971
+      },
+      "billedCostUsd": "0"
+    },
+    {
+      "id": "MBL-0006",
+      "category": "translation_en_mr",
+      "score": 2,
+      "tags": [
+        "translationese",
+        "poor_marathi"
+      ],
+      "latencyMs": 402,
+      "answers": {
+        "nextDataAction": {
+          "type": "choice",
+          "choice": "add_sft",
+          "probabilities": {
+            "needs_native_review": 0.01,
+            "add_sft": 0.88,
+            "no_train_signal": 0.01,
+            "rewrite_eval_prompt": 0,
+            "add_dpo": 0.1
+          }
+        },
+        "nativeReviewRequired": {
+          "type": "boolean",
+          "probability": 0.81
+        },
+        "promptDefectLikely": {
+          "type": "boolean",
+          "probability": 0.06
+        }
+      },
+      "usage": {
+        "inputTokens": 761,
+        "outputTokens": 110,
+        "totalTokens": 871
+      },
+      "billedCostUsd": "0"
+    },
+    {
+      "id": "MBL-0010",
+      "category": "translation_en_mr",
+      "score": 2,
+      "tags": [
+        "translationese"
+      ],
+      "latencyMs": 338,
+      "answers": {
+        "nextDataAction": {
+          "type": "choice",
+          "choice": "add_sft",
+          "probabilities": {
+            "add_dpo": 0.13,
+            "no_train_signal": 0.01,
+            "add_sft": 0.7,
+            "needs_native_review": 0.14,
+            "rewrite_eval_prompt": 0.02
+          }
+        },
+        "nativeReviewRequired": {
+          "type": "boolean",
+          "probability": 0.77
+        },
+        "promptDefectLikely": {
+          "type": "boolean",
+          "probability": 0.1
+        }
+      },
+      "usage": {
+        "inputTokens": 743,
+        "outputTokens": 110,
+        "totalTokens": 853
+      },
+      "billedCostUsd": "0"
+    },
+    {
+      "id": "MBL-0020",
+      "category": "code_mix",
+      "score": 2,
+      "tags": [
+        "too_verbose"
+      ],
+      "latencyMs": 474,
+      "answers": {
+        "nextDataAction": {
+          "type": "choice",
+          "choice": "add_sft",
+          "probabilities": {
+            "needs_native_review": 0.02,
+            "no_train_signal": 0.03,
+            "add_sft": 0.83,
+            "add_dpo": 0.07,
+            "rewrite_eval_prompt": 0.05
+          }
+        },
+        "nativeReviewRequired": {
+          "type": "boolean",
+          "probability": 0.17
+        },
+        "promptDefectLikely": {
+          "type": "boolean",
+          "probability": 0.18
+        }
+      },
+      "usage": {
+        "inputTokens": 1105,
+        "outputTokens": 110,
+        "totalTokens": 1215
+      },
+      "billedCostUsd": "0"
+    },
+    {
+      "id": "MBL-0028",
+      "category": "daily_life_mh",
+      "score": 2,
+      "tags": [
+        "too_generic"
+      ],
+      "latencyMs": 368,
+      "answers": {
+        "nextDataAction": {
+          "type": "choice",
+          "choice": "add_sft",
+          "probabilities": {
+            "needs_native_review": 0.01,
+            "add_dpo": 0.06,
+            "add_sft": 0.87,
+            "no_train_signal": 0.05,
+            "rewrite_eval_prompt": 0.01
+          }
+        },
+        "nativeReviewRequired": {
+          "type": "boolean",
+          "probability": 0.44
+        },
+        "promptDefectLikely": {
+          "type": "boolean",
+          "probability": 0.11
+        }
+      },
+      "usage": {
+        "inputTokens": 1178,
+        "outputTokens": 110,
+        "totalTokens": 1288
+      },
+      "billedCostUsd": "0"
+    },
+    {
+      "id": "MBL-0031",
+      "category": "culture_nuance",
+      "score": 2,
+      "tags": [
+        "too_verbose"
+      ],
+      "latencyMs": 408,
+      "answers": {
+        "nextDataAction": {
+          "type": "choice",
+          "choice": "rewrite_eval_prompt",
+          "probabilities": {
+            "no_train_signal": 0.03,
+            "add_sft": 0.11,
+            "rewrite_eval_prompt": 0.83,
+            "needs_native_review": 0.02,
+            "add_dpo": 0.01
+          }
+        },
+        "nativeReviewRequired": {
+          "type": "boolean",
+          "probability": 0.43
+        },
+        "promptDefectLikely": {
+          "type": "boolean",
+          "probability": 0.72
+        }
+      },
+      "usage": {
+        "inputTokens": 1194,
+        "outputTokens": 110,
+        "totalTokens": 1304
+      },
+      "billedCostUsd": "0"
+    },
+    {
+      "id": "MBL-0043",
+      "category": "hallucination_trap",
+      "score": 2,
+      "tags": [
+        "overconfident",
+        "too_verbose"
+      ],
+      "latencyMs": 503,
+      "answers": {
+        "nextDataAction": {
+          "type": "choice",
+          "choice": "add_sft",
+          "probabilities": {
+            "rewrite_eval_prompt": 0.23,
+            "no_train_signal": 0.03,
+            "add_sft": 0.56,
+            "needs_native_review": 0.06,
+            "add_dpo": 0.12
+          }
+        },
+        "nativeReviewRequired": {
+          "type": "boolean",
+          "probability": 0.2
+        },
+        "promptDefectLikely": {
+          "type": "boolean",
+          "probability": 0.24
+        }
+      },
+      "usage": {
+        "inputTokens": 1180,
+        "outputTokens": 110,
+        "totalTokens": 1290
+      },
+      "billedCostUsd": "0"
+    }
+  ]
+}
